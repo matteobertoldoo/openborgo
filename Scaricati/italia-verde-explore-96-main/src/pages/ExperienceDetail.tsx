@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ChevronLeft, Star, MapPin, Calendar, Users, Clock, UtensilsCrossed, Bike, Tent, Leaf } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -18,6 +18,11 @@ const ExperienceDetail = ({ type }: ExperienceDetailProps) => {
   const [selectedImage, setSelectedImage] = useState(0);
   const [selectedDate, setSelectedDate] = useState('');
   const [participants, setParticipants] = useState(2);
+  
+  // Scroll to top on mount
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   
   // Find the experience by ID and type if provided
   const experience = experiences.find(e => {

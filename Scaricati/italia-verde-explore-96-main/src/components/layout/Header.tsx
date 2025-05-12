@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { MapPin, Menu, X, Search } from 'lucide-react';
@@ -8,6 +7,7 @@ import { cn } from '@/lib/utils';
 const navigation = [
   { name: 'Regions', href: '/regions' },
   { name: 'Accommodations', href: '/accommodations' },
+  { name: 'Properties', href: '/properties' },
   { name: 'Experiences', href: '/experiences' },
   { name: 'Events', href: '/events' },
   { name: 'Sustainability', href: '/sustainability' },

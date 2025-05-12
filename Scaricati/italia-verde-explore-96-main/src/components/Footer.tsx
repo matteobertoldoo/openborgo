@@ -31,10 +31,10 @@ const Footer = () => {
             <h3 className="font-semibold mb-4">Explore</h3>
             <ul className="space-y-2 text-sm">
               <li><Link to="/regions" className="hover:text-italia-terracotta">Regions</Link></li>
-              <li><Link to="/stays" className="hover:text-italia-terracotta">Stays</Link></li>
+              <li><Link to="/accommodations" className="hover:text-italia-terracotta">Accommodations</Link></li>
               <li><Link to="/experiences" className="hover:text-italia-terracotta">Experiences</Link></li>
-              <li><Link to="/villas" className="hover:text-italia-terracotta">Villas</Link></li>
-              <li><Link to="/farmhouses" className="hover:text-italia-terracotta">Farmhouses</Link></li>
+              <li><Link to="/properties" className="hover:text-italia-terracotta">Properties</Link></li>
+              <li><Link to="/events" className="hover:text-italia-terracotta">Events</Link></li>
             </ul>
           </div>
           
@@ -64,13 +64,10 @@ const Footer = () => {
         <div className="border-t border-white/20 mt-8 pt-8 text-center text-sm">
           <p className="font-bold">© {new Date().getFullYear()} openborgo. All rights reserved.</p>
           <div className="mt-4">
-            <p className="font-semibold">Contact Us</p>
-            <p className="mt-2">
-              <a href="mailto:openborgo@gmail.com" className="text-white hover:text-italia-terracotta font-bold">openborgo@gmail.com</a>
-            </p>
-            <p className="mt-1">
-              <a href="tel:+393922679119" className="text-white hover:text-italia-terracotta font-bold">+39 392 267 9119</a>
-            </p>
+            <div className="flex flex-col space-y-2">
+              <h3 className="text-lg font-semibold">Contact Us</h3>
+              <p>Email: info@openborgo.com</p>
+            </div>
             <Link to="/contact" className="inline-block mt-2 text-white hover:text-italia-terracotta underline font-semibold">
               Send us a message
             </Link>

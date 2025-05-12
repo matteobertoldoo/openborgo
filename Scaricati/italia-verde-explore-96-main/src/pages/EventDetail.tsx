@@ -6,12 +6,37 @@ import { events, villages } from '@/data/mockData';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import NotFound from './NotFound';
+import { useState, useEffect } from 'react';
 
 const EventDetail = () => {
   const { id } = useParams();
-  const event = events.find(e => e.id === id);
-  
-  if (!event) {
+  const [event, setEvent] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Scroll to top on mount
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
+    setLoading(true);
+    fetch(`https://italia-verde-explore-fork.onrender.com/api/events/${id}`)
+      .then(res => res.json())
+      .then(data => {
+        setEvent(data);
+        setLoading(false);
+      })
+      .catch(err => {
+        setError('Failed to load event');
+        setLoading(false);
+      });
+  }, [id]);
+
+  if (loading) {
+    return <div className="text-center py-10">Loading event...</div>;
+  }
+  if (error || !event) {
     return <NotFound />;
   }
 

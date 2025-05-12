@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ChevronLeft, Star, MapPin, Calendar as CalendarIcon, Users, Check, Wifi, Car, Home, Utensils, Leaf } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -10,6 +10,8 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Calendar } from '@/components/ui/calendar';
 import { DateRange } from 'react-day-picker';
 import { addDays, format } from 'date-fns';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { cn } from '@/lib/utils';
 
 const PropertyDetail = () => {
   const { id } = useParams();
@@ -19,11 +21,14 @@ const PropertyDetail = () => {
     from: new Date(),
     to: addDays(new Date(), 7),
   });
+  const property = properties.find((p) => String(p.id) === String(id));
+  const [popoverOpen, setPopoverOpen] = useState(false);
   
-  // Find the property by ID
-  const property = properties.find(p => p.id === id);
+  // Scroll to top on mount
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   
-  // If property not found, return 404
   if (!property) {
     return <NotFound />;
   }
@@ -32,8 +37,10 @@ const PropertyDetail = () => {
     setDate(range);
     if (range?.from && range?.to) {
       const diffTime = Math.abs(range.to.getTime() - range.from.getTime());
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      if (diffDays === 0) diffDays = 1;
       setNights(diffDays);
+      setPopoverOpen(false);
     }
   };
 
@@ -48,8 +55,8 @@ const PropertyDetail = () => {
         {/* Property Images */}
         <section className="bg-italia-cream">
           <div className="container mx-auto px-4 py-4">
-            <Link to="/stays" className="inline-flex items-center text-italia-sage hover:underline mb-4 dark:text-italia-sage">
-              <ChevronLeft className="h-4 w-4 mr-1" /> Back to all stays
+            <Link to="/accommodations" className="inline-flex items-center text-italia-sage hover:underline mb-4 dark:text-italia-sage">
+              <ChevronLeft className="h-4 w-4 mr-1" /> Back to all accommodations
             </Link>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -153,19 +160,37 @@ const PropertyDetail = () => {
                     <div className="space-y-4 mb-6">
                       <div className="border rounded-lg p-4">
                         <div className="flex items-center mb-2">
-                          <Calendar className="h-5 w-5 text-italia-sage mr-2" />
+                          <CalendarIcon className="h-5 w-5 text-italia-sage mr-2" />
                           <span className="font-semibold text-italia-brown dark:text-white">Check-in / Check-out</span>
                         </div>
-                        <div className="relative">
-                          <Calendar
-                            mode="range"
-                            selected={date}
-                            onSelect={handleDateSelect}
-                            className="rounded-md border"
-                            numberOfMonths={2}
-                            fromDate={new Date()}
-                          />
-                        </div>
+                        <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
+                          <PopoverTrigger asChild>
+                            <Button 
+                              variant="outline" 
+                              className="w-full justify-start text-left font-normal"
+                              onClick={() => setPopoverOpen(true)}
+                            >
+                              <CalendarIcon className="mr-2 h-4 w-4 text-italia-sage" />
+                              {date?.from && date?.to ? (
+                                <span>
+                                  {format(date.from, 'dd MMM yyyy')} - {format(date.to, 'dd MMM yyyy')}
+                                </span>
+                              ) : (
+                                <span className="text-muted-foreground">Select dates</span>
+                              )}
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent style={{zIndex: 9999}} className="w-auto p-0" align="start">
+                            <Calendar
+                              mode="range"
+                              selected={date}
+                              onSelect={handleDateSelect}
+                              numberOfMonths={2}
+                              fromDate={new Date()}
+                              className={cn('p-3 pointer-events-auto')}
+                            />
+                          </PopoverContent>
+                        </Popover>
                       </div>
                       
                       <div className="border rounded-lg p-4">
@@ -184,17 +209,17 @@ const PropertyDetail = () => {
                         <span>€{property.price} x {nights} nights</span>
                         <span>€{property.price * nights}</span>
                       </div>
-                      <div className="flex justify-between text-italia-brown dark:text-white">
+                      <div className="flex justify-between text-xs text-muted-foreground/80 dark:text-muted-foreground/80" style={{opacity:0.7}}>
                         <span>Service fee (9%)</span>
                         <span>€{Math.round(property.price * nights * 0.09)}</span>
                       </div>
-                      <div className="flex justify-between items-center bg-italia-mint/10 p-3 rounded-lg border border-italia-mint/20">
-                        <span className="flex items-center text-italia-sage font-medium">
-                          <Leaf className="h-5 w-5 mr-2 text-italia-sage" />
+                      <div className="flex justify-between items-center bg-gradient-to-r from-green-300 via-green-400 to-green-500 p-3 rounded-lg border border-green-600/40 shadow-md">
+                        <span className="flex items-center text-green-900 font-bold text-lg">
+                          <Leaf className="h-6 w-6 mr-2 text-green-800 animate-bounce" />
                           Village Fund
-                          <span className="ml-2 text-xs bg-italia-sage/10 text-italia-sage px-2 py-0.5 rounded-full">3%</span>
+                          <span className="ml-2 text-xs bg-green-700 text-white px-2 py-0.5 rounded-full font-bold shadow">3%</span>
                         </span>
-                        <span className="text-italia-sage font-medium">€{Math.round(property.price * nights * 0.03)}</span>
+                        <span className="text-green-900 font-bold text-lg">€{Math.round(property.price * nights * 0.03)}</span>
                       </div>
                       <div className="text-xs text-muted-foreground dark:text-muted-foreground text-center">
                         Supporting local heritage and nature
@@ -206,10 +231,17 @@ const PropertyDetail = () => {
                     </div>
                     
                     <Button 
-                      className="w-full bg-italia-sage hover:bg-italia-sage/90 text-white"
+                      className="w-full bg-italia-sage hover:bg-italia-sage/90 text-white mb-2"
                       onClick={handleBookNow}
                     >
                       Book now
+                    </Button>
+                    
+                    <Button 
+                      className="w-full bg-green-700 hover:bg-green-800 text-white font-bold text-lg shadow-lg"
+                      onClick={() => alert('Pagamento non ancora disponibile')}
+                    >
+                      Paga ora
                     </Button>
                     
                     <p className="text-xs text-center text-italia-brown/70 mt-4 dark:text-muted-foreground">
@@ -223,7 +255,7 @@ const PropertyDetail = () => {
         </section>
         
         {/* Similar Properties */}
-        <section className="py-8 bg-italia-cream">
+        {/* <section className="py-8 bg-italia-cream">
           <div className="container mx-auto px-4">
             <h2 className="text-2xl font-playfair font-bold mb-6 text-italia-brown dark:text-white">Similar properties you might like</h2>
             
@@ -259,7 +291,7 @@ const PropertyDetail = () => {
               ))}
             </div>
           </div>
-        </section>
+        </section> */}
       </main>
       
       <Footer />
