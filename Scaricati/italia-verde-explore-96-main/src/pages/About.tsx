@@ -104,64 +104,82 @@ const About = () => {
           <div className="container mx-auto px-4">
             <h2 className="text-3xl font-playfair font-bold mb-12 text-center text-italia-brown">Our Team</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {/* Andrea Ballarini */}
               <div className="bg-white p-6 rounded-lg shadow-md text-center">
-                <div className="w-32 h-32 rounded-full bg-italia-sage/10 mx-auto mb-4 flex items-center justify-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 text-italia-sage" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                  </svg>
+                <div className="w-32 h-32 rounded-full bg-italia-sage/10 mx-auto mb-4 flex items-center justify-center overflow-hidden">
+                  <img
+                    src="https://media.licdn.com/dms/image/v2/D4D03AQFsoPBoi5JFyg/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1715292853388?e=1752710400&v=beta&t=Xj5VtCGXirHOZZyhnC0as94vO9el23Fh62K59T2h_-c"
+                    alt="Ballarini Andrea"
+                    className="w-full h-full object-cover"
+                  />
                 </div>
                 <h3 className="text-xl font-bold mb-2 text-italia-brown">Ballarini Andrea</h3>
-                <p className="text-gray-600">Software Engineer & Fintech</p>
+                <p className="text-gray-600">Software Engineer – Fintech Innovations</p>
               </div>
 
+              {/* Kalinina Nataliia */}
               <div className="bg-white p-6 rounded-lg shadow-md text-center">
-                <div className="w-32 h-32 rounded-full bg-italia-sage/10 mx-auto mb-4 flex items-center justify-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 text-italia-sage" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                  </svg>
+                <div className="w-32 h-32 rounded-full bg-italia-sage/10 mx-auto mb-4 flex items-center justify-center overflow-hidden">
+                  <img
+                    src="https://randomuser.me/api/portraits/women/44.jpg"
+                    alt="Kalinina Nataliia"
+                    className="w-full h-full object-cover"
+                  />
                 </div>
                 <h3 className="text-xl font-bold mb-2 text-italia-brown">Kalinina Nataliia</h3>
                 <p className="text-gray-600">Product Manager</p>
               </div>
 
+              {/* Ezukuse Edith */}
               <div className="bg-white p-6 rounded-lg shadow-md text-center">
-                <div className="w-32 h-32 rounded-full bg-italia-sage/10 mx-auto mb-4 flex items-center justify-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 text-italia-sage" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                  </svg>
+                <div className="w-32 h-32 rounded-full bg-italia-sage/10 mx-auto mb-4 flex items-center justify-center overflow-hidden">
+                  <img
+                    src="https://media.licdn.com/dms/image/v2/D4D03AQGooFMWvdbgOg/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1697444543273?e=1752710400&v=beta&t=ZGokLC5YJJTTOjcXcevJ3CDyo-k8PeCFQct1jd2CMqc"
+                    alt="Ezukuse Edith"
+                    className="w-full h-full object-cover"
+                  />
                 </div>
                 <h3 className="text-xl font-bold mb-2 text-italia-brown">Ezukuse Edith</h3>
-                <p className="text-gray-600">Marketing Manager</p>
+                <p className="text-gray-600">Global Marketing & Brand Manager</p>
               </div>
 
+              {/* Li Lin */}
               <div className="bg-white p-6 rounded-lg shadow-md text-center">
-                <div className="w-32 h-32 rounded-full bg-italia-sage/10 mx-auto mb-4 flex items-center justify-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 text-italia-sage" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                  </svg>
+                <div className="w-32 h-32 rounded-full bg-italia-sage/10 mx-auto mb-4 flex items-center justify-center overflow-hidden">
+                  <img
+                    src="https://randomuser.me/api/portraits/men/76.jpg"
+                    alt="Li Lin"
+                    className="w-full h-full object-cover"
+                  />
                 </div>
                 <h3 className="text-xl font-bold mb-2 text-italia-brown">Li Lin</h3>
                 <p className="text-gray-600">BackEnd Developer & AI Specialist</p>
               </div>
 
+              {/* Camarda Alba */}
               <div className="bg-white p-6 rounded-lg shadow-md text-center">
-                <div className="w-32 h-32 rounded-full bg-italia-sage/10 mx-auto mb-4 flex items-center justify-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 text-italia-sage" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                  </svg>
+                <div className="w-32 h-32 rounded-full bg-italia-sage/10 mx-auto mb-4 flex items-center justify-center overflow-hidden">
+                  <img
+                    src="https://media.licdn.com/dms/image/v2/D4D35AQFCxGMO_4bc5Q/profile-framedphoto-shrink_200_200/B4DZYkOxWRHIAY-/0/1744364574370?e=1747663200&v=beta&t=zgz26p7FrZ6iO0YIQi4u8Nk-mnw9xNYg0ci96iYgppY"
+                    alt="Camarda Alba"
+                    className="w-full h-full object-cover"
+                  />
                 </div>
                 <h3 className="text-xl font-bold mb-2 text-italia-brown">Camarda Alba</h3>
                 <p className="text-gray-600">Local Representative</p>
               </div>
 
+              {/* Bertoldo Matteo */}
               <div className="bg-white p-6 rounded-lg shadow-md text-center">
-                <div className="w-32 h-32 rounded-full bg-italia-sage/10 mx-auto mb-4 flex items-center justify-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 text-italia-sage" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                  </svg>
+                <div className="w-32 h-32 rounded-full bg-italia-sage/10 mx-auto mb-4 flex items-center justify-center overflow-hidden">
+                  <img
+                    src="https://media.licdn.com/dms/image/v2/D4D03AQHUvqQcilRsDA/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1667072544530?e=1752710400&v=beta&t=a57jzch80mzCSuPTMmUDHFyf75Ije4OucLjDsps2whI"
+                    alt="Bertoldo Matteo"
+                    className="w-full h-full object-cover"
+                  />
                 </div>
                 <h3 className="text-xl font-bold mb-2 text-italia-brown">Bertoldo Matteo</h3>
-                <p className="text-gray-600">FrontEnd Developer & Cybersecurity Expert</p>
+                <p className="text-gray-600">Full-Stack Developer & Cybersecurity Consultant</p>
               </div>
             </div>
           </div>
