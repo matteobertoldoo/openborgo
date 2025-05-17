@@ -5,12 +5,14 @@ import Footer from '@/components/Footer';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Search, MapPin, Star, Bed } from 'lucide-react';
+import CouponInput from '@/components/CouponInput';
 
 const Accommodations = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [accommodations, setAccommodations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [discount, setDiscount] = useState<{ type: 'percentage' | 'price', value: number } | null>(null);
 
   // Scroll to top on mount
   useEffect(() => {
@@ -38,6 +40,16 @@ const Accommodations = () => {
     );
   });
 
+  const calculateDiscountedPrice = (originalPrice: number) => {
+    if (!discount) return originalPrice;
+    
+    if (discount.type === 'percentage') {
+      return originalPrice * (1 - discount.value / 100);
+    } else {
+      return Math.max(0, originalPrice - discount.value);
+    }
+  };
+
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar />
@@ -56,7 +68,7 @@ const Accommodations = () => {
         <section className="py-8">
           <div className="container mx-auto px-4">
             <div className="bg-white rounded-lg p-6 shadow-md mb-6">
-              <div className="flex gap-4">
+              <div className="flex gap-4 flex-wrap">
                 <div className="relative flex-1">
                   <Search className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
                   <Input 
@@ -64,11 +76,12 @@ const Accommodations = () => {
                     placeholder="Search accommodations..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                  />
-                </div>
-                <Button className="bg-italia-sage hover:bg-italia-sage/90">
-                  Filter
-                </Button>
+                    />
+                  </div>
+                  <Button className="bg-italia-sage hover:bg-italia-sage/90">
+                    Filter
+                  </Button>
+                <CouponInput onCouponApplied={setDiscount} />
               </div>
             </div>
             {loading ? (
@@ -76,47 +89,58 @@ const Accommodations = () => {
             ) : error ? (
               <div className="text-center text-red-500 py-10">{error}</div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredAccommodations.map((accommodation) => (
-                  <Link key={accommodation.id} to={`/accommodations/${accommodation.id}`} className="group">
-                    <div className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow h-full">
-                      <div className="relative h-52">
-                        <img 
-                          src={accommodation.images[0]} 
-                          alt={accommodation.name} 
-                          className="w-full h-full object-cover"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                        {accommodation.featured && (
-                          <div className="absolute top-3 right-3 bg-italia-mint/20 text-italia-sage text-xs px-2 py-1 rounded-full">
-                            Featured
-                          </div>
-                        )}
-                      </div>
-                      <div className="p-4">
-                        <h3 className="text-lg font-bold mb-1 text-foreground">{accommodation.name}</h3>
-                        <p className="text-sm text-muted-foreground mb-2 flex items-center">
-                          <MapPin className="h-3.5 w-3.5 mr-1 text-italia-sage" /> {accommodation.location}
-                        </p>
-                        <div className="flex justify-between items-center">
-                          <div className="flex items-center">
-                            <Star className="h-3.5 w-3.5 text-amber-400 mr-1" />
-                            <span className="text-sm text-italia-sage font-semibold mr-1">
-                              {accommodation.rating}
-                            </span>
-                            <span className="text-xs text-muted-foreground">
-                              ({accommodation.reviewCount} reviews)
-                            </span>
-                          </div>
-                          <div className="font-semibold text-foreground">
-                            €{accommodation.price} <span className="text-xs text-muted-foreground">/ night</span>
-                          </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredAccommodations.map((accommodation) => {
+                  const discountedPrice = calculateDiscountedPrice(accommodation.price);
+                  return (
+                    <Link key={accommodation.id} to={`/accommodations/${accommodation.id}`} className="group">
+                      <div className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow h-full">
+                    <div className="relative h-52">
+                      <img 
+                            src={accommodation.images[0]} 
+                            alt={accommodation.name} 
+                        className="w-full h-full object-cover"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                          {accommodation.featured && (
+                        <div className="absolute top-3 right-3 bg-italia-mint/20 text-italia-sage text-xs px-2 py-1 rounded-full">
+                          Featured
+                        </div>
+                      )}
+                    </div>
+                    <div className="p-4">
+                          <h3 className="text-lg font-bold mb-1 text-foreground">{accommodation.name}</h3>
+                          <p className="text-sm text-muted-foreground mb-2 flex items-center">
+                            <MapPin className="h-3.5 w-3.5 mr-1 text-italia-sage" /> {accommodation.location}
+                      </p>
+                      <div className="flex justify-between items-center">
+                        <div className="flex items-center">
+                          <Star className="h-3.5 w-3.5 text-amber-400 mr-1" />
+                          <span className="text-sm text-italia-sage font-semibold mr-1">
+                                {accommodation.rating}
+                          </span>
+                              <span className="text-xs text-muted-foreground">
+                                ({accommodation.reviewCount} reviews)
+                          </span>
+                        </div>
+                            <div className="font-semibold text-foreground">
+                              {discount ? (
+                                <>
+                                  <span className="line-through text-gray-400 mr-2">€{accommodation.price}</span>
+                                  <span>€{discountedPrice.toFixed(2)}</span>
+                                </>
+                              ) : (
+                                <>€{accommodation.price}</>
+                              )}
+                              <span className="text-xs text-muted-foreground">/ night</span>
                         </div>
                       </div>
                     </div>
-                  </Link>
-                ))}
-              </div>
+                  </div>
+                </Link>
+                  );
+                })}
+            </div>
             )}
           </div>
         </section>

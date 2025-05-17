@@ -37,8 +37,8 @@ export default function InteractiveMap() {
         {/* Interactive Map */}
         <div className="bg-white rounded-xl shadow-xl p-6 mb-10 relative overflow-hidden h-[500px]">
           <MapBox 
-            center={[41.8719, 12.5674]}
-            zoom={5}
+            center={[41.8719, 12.5674]} 
+            zoom={5} 
             markers={mapMarkers}
             onMarkerClick={handleMarkerClick}
             height="420px"

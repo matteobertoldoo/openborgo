@@ -9,6 +9,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { format } from 'date-fns';
 import { DateRange } from 'react-day-picker';
 import { cn } from '@/lib/utils';
+import CouponInput from '@/components/CouponInput';
 
 const Experiences = () => {
   const [location, setLocation] = useState('');
@@ -17,6 +18,7 @@ const Experiences = () => {
     to: undefined,
   });
   const [type, setType] = useState('');
+  const [discount, setDiscount] = useState<{ type: 'percentage' | 'price', value: number } | null>(null);
 
   const experiences = [
     {
@@ -65,6 +67,20 @@ const Experiences = () => {
     }
   ];
 
+  const calculateDiscountedPrice = (originalPrice: number) => {
+    if (!discount) return originalPrice;
+    
+    if (discount.type === 'percentage') {
+      return originalPrice * (1 - discount.value / 100);
+    } else {
+      return Math.max(0, originalPrice - discount.value);
+    }
+  };
+
+  const handleCouponApplied = (newDiscount: { type: 'percentage' | 'price', value: number }) => {
+    setDiscount(newDiscount);
+  };
+
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar />
@@ -82,7 +98,7 @@ const Experiences = () => {
             </p>
           </div>
         </section>
-
+        
         {/* Search Section */}
         <section className="py-8 bg-white">
           <div className="container mx-auto px-4">
@@ -154,56 +170,69 @@ const Experiences = () => {
                   <div className="absolute inset-y-0 left-0 flex items-center pl-3">
                     <Search className="h-5 w-5 text-black" />
                   </div>
-                  <button 
+                <button
                     className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-openborgo-terracotta bg-openborgo-terracotta hover:bg-openborgo-terracotta/90 text-white flex items-center justify-center text-base font-semibold"
                   >
                     Search
-                  </button>
-                </div>
+                </button>
+            </div>
+          </div>
+              <div className="mt-4 flex justify-end">
+                <CouponInput onCouponApplied={handleCouponApplied} />
               </div>
             </div>
           </div>
         </section>
-
+        
         {/* Experiences Grid */}
         <section className="py-16">
           <div className="container mx-auto px-4">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {experiences.map((experience) => (
-                <div key={experience.id} className="bg-white rounded-lg shadow-lg overflow-hidden">
-                  <div className="relative h-48">
-                    <img 
-                      src={experience.image} 
-                      alt={experience.title}
-                      className="w-full h-full object-cover"
-                    />
-                    <div className="absolute top-4 right-4 bg-white/90 px-2 py-1 rounded-full text-sm font-semibold">
-                      €{experience.price}
+              {experiences.map((experience) => {
+                const discountedPrice = calculateDiscountedPrice(experience.price);
+                return (
+                  <div key={experience.id} className="bg-white rounded-lg shadow-lg overflow-hidden">
+                    <div className="relative h-48">
+                      <img
+                        src={experience.image} 
+                        alt={experience.title}
+                        className="w-full h-full object-cover"
+                      />
+                      <div className="absolute top-4 right-4 bg-white/90 px-2 py-1 rounded-full text-sm font-semibold">
+                        {discount ? (
+                          <div className="flex flex-col items-end">
+                            <span className="line-through text-gray-500">€{experience.price}</span>
+                            <span className="text-green-600">€{discountedPrice.toFixed(2)}</span>
+                          </div>
+                        ) : (
+                          `€${experience.price}`
+                        )}
+                          </div>
+                        </div>
+                    <div className="p-6">
+                      <h3 className="text-xl font-bold mb-2 text-italia-brown">{experience.title}</h3>
+                      <p className="text-gray-600 mb-4">{experience.description}</p>
+                      <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
+                        <div className="flex items-center">
+                          <MapPin className="h-4 w-4 mr-1" />
+                          {experience.location}
+                        </div>
+                        <div>{experience.duration}</div>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center">
+                          <span className="text-yellow-400 mr-1">★</span>
+                          <span className="font-semibold">{experience.rating}</span>
+                          <span className="text-gray-500 ml-1">({experience.reviews} reviews)</span>
+                        </div>
+                        <Button className="bg-italia-sage hover:bg-italia-sage/90" asChild>
+                          <Link to={`/experiences/${experience.id}`}>View Details</Link>
+                        </Button>
+                      </div>
                     </div>
                   </div>
-                  <div className="p-6">
-                    <h3 className="text-xl font-bold mb-2 text-italia-brown">{experience.title}</h3>
-                    <p className="text-gray-600 mb-4">{experience.description}</p>
-                    <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
-                      <div className="flex items-center">
-                        <MapPin className="h-4 w-4 mr-1" />
-                        {experience.location}
-                      </div>
-                      <div>{experience.duration}</div>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center">
-                        <span className="text-yellow-400 mr-1">★</span>
-                        <span className="font-semibold">{experience.rating}</span>
-                        <span className="text-gray-500 ml-1">({experience.reviews} reviews)</span>
-                      </div>
-                      <Button className="bg-italia-sage hover:bg-italia-sage/90" asChild>
-                        <Link to={`/experiences/${experience.id}`}>View Details</Link>
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </section>

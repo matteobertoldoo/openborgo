@@ -37,7 +37,7 @@ const Regions = () => {
       region.description.toLowerCase().includes(searchQuery.toLowerCase())
     );
   });
-
+  
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar />
@@ -58,13 +58,13 @@ const Regions = () => {
             <div className="bg-white rounded-lg p-6 shadow-md mb-6">
               <div className="flex gap-4">
                 <div className="relative flex-1">
-                  <Search className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
-                  <Input 
+                <Search className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
+                <Input 
                     className="pl-10 text-foreground"
-                    placeholder="Search regions..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                  />
+                  placeholder="Search regions..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
                 </div>
                 <Button className="bg-italia-sage hover:bg-italia-sage/90">
                   Filter
@@ -107,13 +107,13 @@ const Regions = () => {
                             <span className="text-sm text-italia-sage font-semibold">
                               {region.rating}
                             </span>
-                          </div>
+          </div>
                           <Button variant="link" className="text-italia-sage">
                             Explore Region
                           </Button>
-                        </div>
-                      </div>
-                    </div>
+            </div>
+          </div>
+              </div>
                   </Link>
                 ))}
               </div>

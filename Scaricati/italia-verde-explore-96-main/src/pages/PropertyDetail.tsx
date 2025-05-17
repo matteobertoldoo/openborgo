@@ -3,7 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { ChevronLeft, Star, MapPin, Calendar as CalendarIcon, Users, Check, Wifi, Car, Home, Utensils, Leaf } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { properties } from '@/data/mockData';
+import { properties as mockProperties } from '@/data/mockData';
 import Footer from '@/components/Footer';
 import NotFound from './NotFound';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
@@ -12,6 +12,7 @@ import { DateRange } from 'react-day-picker';
 import { addDays, format } from 'date-fns';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
+import { Input } from '@/components/ui/input';
 
 const PropertyDetail = () => {
   const { id } = useParams();
@@ -21,14 +22,41 @@ const PropertyDetail = () => {
     from: new Date(),
     to: addDays(new Date(), 7),
   });
-  const property = properties.find((p) => String(p.id) === String(id));
+  // --- API + MockData logic ---
+  const [property, setProperty] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
   const [popoverOpen, setPopoverOpen] = useState(false);
-  
-  // Scroll to top on mount
+  const [couponInput, setCouponInput] = useState('');
+  const [couponStatus, setCouponStatus] = useState<'idle' | 'loading' | 'valid' | 'invalid'>('idle');
+  const [couponData, setCouponData] = useState<{ percentage?: number; price?: number } | null>(null);
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-  
+
+  // Prefer API, fallback to mockData if API fails
+  useEffect(() => {
+    setLoading(true);
+    fetch(`https://italia-verde-explore-fork.onrender.com/api/accommodations/${id}`)
+      .then(res => {
+        if (!res.ok) throw new Error();
+        return res.json();
+      })
+      .then(data => {
+        setProperty(data);
+        setLoading(false);
+      })
+      .catch(() => {
+        // fallback to mock data
+        const fallback = mockProperties.find((p) => String(p.id) === String(id));
+        setProperty(fallback || null);
+        setLoading(false);
+      });
+  }, [id]);
+
+  if (loading) {
+    return <div className="text-center py-10">Loading...</div>;
+  }
   if (!property) {
     return <NotFound />;
   }
@@ -47,6 +75,35 @@ const PropertyDetail = () => {
   const handleBookNow = () => {
     // Handle booking logic
     alert('Booking functionality will be implemented!');
+  };
+
+  const handleValidateCoupon = async () => {
+    if (!couponInput) return;
+    setCouponStatus('loading');
+    setCouponData(null);
+    try {
+      const res = await fetch(`https://italia-verde-explore-fork.onrender.com/api/coupons/?code=${encodeURIComponent(couponInput)}`);
+      const data = await res.json();
+      if (res.ok && data.length > 0 && (data[0].percentage || data[0].price)) {
+        setCouponData({ percentage: data[0].percentage, price: data[0].price });
+        setCouponStatus('valid');
+      } else {
+        setCouponStatus('invalid');
+      }
+    } catch {
+      setCouponStatus('invalid');
+    }
+  };
+
+  const calculateTotalPrice = () => {
+    const baseTotal = property.price * nights + Math.round(property.price * nights * 0.12);
+    let discount = 0;
+    if (couponData?.percentage) {
+      discount = Math.round(baseTotal * (couponData.percentage / 100));
+    } else if (couponData?.price) {
+      discount = Math.min(baseTotal, couponData.price);
+    }
+    return baseTotal - discount;
   };
 
   return (
@@ -181,14 +238,14 @@ const PropertyDetail = () => {
                             </Button>
                           </PopoverTrigger>
                           <PopoverContent style={{zIndex: 9999}} className="w-auto p-0" align="start">
-                            <Calendar
-                              mode="range"
-                              selected={date}
-                              onSelect={handleDateSelect}
-                              numberOfMonths={2}
-                              fromDate={new Date()}
+                          <Calendar
+                            mode="range"
+                            selected={date}
+                            onSelect={handleDateSelect}
+                            numberOfMonths={2}
+                            fromDate={new Date()}
                               className={cn('p-3 pointer-events-auto')}
-                            />
+                          />
                           </PopoverContent>
                         </Popover>
                       </div>
@@ -209,11 +266,12 @@ const PropertyDetail = () => {
                         <span>€{property.price} x {nights} nights</span>
                         <span>€{property.price * nights}</span>
                       </div>
+                      {/* Mantieni i mock breakdown, puoi togliere o commentare queste righe se vuoi nascondere le commissioni */}
                       <div className="flex justify-between text-xs text-muted-foreground/80 dark:text-muted-foreground/80" style={{opacity:0.7}}>
                         <span>Service fee (9%)</span>
                         <span>€{Math.round(property.price * nights * 0.09)}</span>
                       </div>
-                      <div className="flex justify-between items-center bg-gradient-to-r from-green-300 via-green-400 to-green-500 p-3 rounded-lg border border-green-600/40 shadow-md">
+                      <div className="flex justify-between items-center bg-gradient-to-r from-green-300 via-green-400 to-green-500 p-3 rounded-lg border border-green-600/40 shadow-md animate-pulse">
                         <span className="flex items-center text-green-900 font-bold text-lg">
                           <Leaf className="h-6 w-6 mr-2 text-green-800 animate-bounce" />
                           Village Fund
@@ -224,29 +282,66 @@ const PropertyDetail = () => {
                       <div className="text-xs text-muted-foreground dark:text-muted-foreground text-center">
                         Supporting local heritage and nature
                       </div>
+                      <div className="my-4 border-2 border-dashed border-italia-sage/30 rounded-lg p-4 bg-italia-sage/5">
+                        <label className="block text-lg font-semibold mb-3 text-italia-brown flex items-center gap-2">
+                          Hai un coupon?
+                        </label>
+                        <div className="flex gap-2">
+                          <Input
+                            type="text"
+                            placeholder="Inserisci il codice coupon"
+                            value={couponInput}
+                            onChange={e => {
+                              setCouponInput(e.target.value.toUpperCase());
+                              setCouponStatus('idle');
+                            }}
+                            className="w-full"
+                          />
+                          <Button
+                            type="button"
+                            variant="default"
+                            className="bg-italia-sage hover:bg-italia-sage/90 text-black font-bold border border-italia-sage dark:bg-italia-sage dark:hover:bg-italia-sage/90 dark:text-white dark:border-italia-sage"
+                            onClick={handleValidateCoupon}
+                            disabled={!couponInput || couponStatus === 'loading'}
+                          >
+                            {couponStatus === 'loading' ? 'Verifica...' : 'Verifica'}
+                          </Button>
+                        </div>
+                        {couponStatus === 'valid' && couponData && (
+                          <div className="mt-3 flex flex-col gap-2 shadow-lg rounded-lg bg-green-50 border border-green-400 p-4">
+                            <div className="flex items-center gap-3">
+                              <svg className="w-7 h-7 text-green-700 mr-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4" /></svg>
+                              <span className="text-green-900 font-bold text-lg">Coupon:</span>
+                              <span className="inline-block bg-green-600 text-white px-3 py-1 rounded text-lg font-bold ml-1">
+                                {couponData.percentage ? `-${couponData.percentage}%` : couponData.price ? `-€${couponData.price}` : ''}
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-2 mt-2">
+                              <span className="inline-block bg-green-600 text-white px-3 py-1 rounded font-bold text-lg">You save:</span>
+                              <span className="text-green-800 font-bold text-lg">
+                                {couponData.percentage ? `-€${Math.round((property.price * nights + Math.round(property.price * nights * 0.12)) * (couponData.percentage / 100))}` : couponData.price ? `-€${couponData.price}` : ''}
+                              </span>
+                            </div>
+                          </div>
+                        )}
+                        {couponStatus === 'invalid' && (
+                          <div className="mt-3 p-2 bg-red-50 border border-red-200 rounded-md text-red-700 text-sm font-medium">
+                            Coupon non valido
+                          </div>
+                        )}
+                      </div>
                       <div className="flex justify-between font-bold pt-2 border-t mt-2 text-italia-brown dark:text-white">
                         <span>Total</span>
-                        <span>€{property.price * nights + Math.round(property.price * nights * 0.12)}</span>
+                        <span>€{calculateTotalPrice()}</span>
                       </div>
                     </div>
                     
                     <Button 
-                      className="w-full bg-italia-sage hover:bg-italia-sage/90 text-white mb-2"
+                      className="w-full bg-italia-sage hover:bg-italia-sage/90 text-black font-bold text-lg shadow-lg border border-italia-sage dark:bg-italia-sage dark:hover:bg-italia-sage/90 dark:text-white dark:border-italia-sage"
                       onClick={handleBookNow}
                     >
-                      Book now
+                      Book & Pay
                     </Button>
-                    
-                    <Button 
-                      className="w-full bg-green-700 hover:bg-green-800 text-white font-bold text-lg shadow-lg"
-                      onClick={() => alert('Pagamento non ancora disponibile')}
-                    >
-                      Paga ora
-                    </Button>
-                    
-                    <p className="text-xs text-center text-italia-brown/70 mt-4 dark:text-muted-foreground">
-                      You won't be charged yet
-                    </p>
                   </CardContent>
                 </Card>
               </div>

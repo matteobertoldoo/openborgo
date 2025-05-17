@@ -36,7 +36,7 @@ const Events = () => {
         setLoading(false);
       });
   }, []);
-
+  
   // Filter events based on search query, date, and category
   const filteredEvents = events.filter(event => {
     const matchesSearch = event.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -134,45 +134,45 @@ const Events = () => {
             ) : error ? (
               <div className="text-center text-red-500 py-10">{error}</div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredEvents.map((event) => (
-                  <Link key={event.id} to={`/events/${event.id}`} className="group">
-                    <div className="bg-white dark:bg-background rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow h-full">
-                      <div className="relative h-52">
-                        <img 
-                          src={event.image} 
-                          alt={event.title} 
-                          className="w-full h-full object-cover"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                        {event.featured && (
-                          <div className="absolute top-3 right-3 bg-amber-500/80 text-white text-xs px-2 py-1 rounded-full">
-                            Featured
-                          </div>
-                        )}
-                        <div className="absolute bottom-3 right-3 bg-white/90 dark:bg-gray-800/90 text-foreground dark:text-white font-medium text-sm px-3 py-1 rounded-full">
-                          {format(new Date(event.date), 'MMM dd, yyyy')}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredEvents.map((event) => (
+                <Link key={event.id} to={`/events/${event.id}`} className="group">
+                  <div className="bg-white dark:bg-background rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow h-full">
+                    <div className="relative h-52">
+                      <img 
+                        src={event.image} 
+                        alt={event.title} 
+                        className="w-full h-full object-cover"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                      {event.featured && (
+                        <div className="absolute top-3 right-3 bg-amber-500/80 text-white text-xs px-2 py-1 rounded-full">
+                          Featured
                         </div>
-                      </div>
-                      <div className="p-4">
-                        <div className="text-xs font-medium text-italia-sage uppercase tracking-wide mb-1">
-                          {event.category}
-                        </div>
-                        <h3 className="text-lg font-bold mb-1 text-foreground dark:text-white">{event.title}</h3>
-                        <p className="text-sm text-muted-foreground dark:text-muted-foreground mb-3 flex items-center">
-                          <MapPin className="h-3.5 w-3.5 mr-1 text-italia-sage" /> {event.location}
-                        </p>
-                        <p className="text-sm text-gray-500 line-clamp-2">
-                          {event.description}
-                        </p>
-                        <Button variant="link" className="mt-2 p-0 h-auto text-italia-sage">
-                          View Details
-                        </Button>
+                      )}
+                      <div className="absolute bottom-3 right-3 bg-white/90 dark:bg-gray-800/90 text-foreground dark:text-white font-medium text-sm px-3 py-1 rounded-full">
+                        {format(new Date(event.date), 'MMM dd, yyyy')}
                       </div>
                     </div>
-                  </Link>
-                ))}
-              </div>
+                    <div className="p-4">
+                      <div className="text-xs font-medium text-italia-sage uppercase tracking-wide mb-1">
+                        {event.category}
+                      </div>
+                      <h3 className="text-lg font-bold mb-1 text-foreground dark:text-white">{event.title}</h3>
+                      <p className="text-sm text-muted-foreground dark:text-muted-foreground mb-3 flex items-center">
+                        <MapPin className="h-3.5 w-3.5 mr-1 text-italia-sage" /> {event.location}
+                      </p>
+                      <p className="text-sm text-gray-500 line-clamp-2">
+                        {event.description}
+                      </p>
+                      <Button variant="link" className="mt-2 p-0 h-auto text-italia-sage">
+                        View Details
+                      </Button>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
             )}
 
             {filteredEvents.length === 0 && (

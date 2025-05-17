@@ -18,6 +18,9 @@ const ExperienceDetail = ({ type }: ExperienceDetailProps) => {
   const [selectedImage, setSelectedImage] = useState(0);
   const [selectedDate, setSelectedDate] = useState('');
   const [participants, setParticipants] = useState(2);
+  const [coupon, setCoupon] = useState('');
+  const [couponStatus, setCouponStatus] = useState<'idle' | 'valid' | 'invalid' | 'loading'>('idle');
+  const [couponData, setCouponData] = useState<{ percentage?: number; price?: number } | null>(null);
   
   // Scroll to top on mount
   useEffect(() => {
@@ -57,6 +60,37 @@ const ExperienceDetail = ({ type }: ExperienceDetailProps) => {
     // Handle reservation logic
     alert('Reservation functionality will be implemented!');
   };
+
+  const handleValidateCoupon = async () => {
+    setCouponStatus('loading');
+    setCouponData(null);
+    try {
+      const res = await fetch(`https://italia-verde-explore-fork.onrender.com/api/coupons/?code=${encodeURIComponent(coupon)}`);
+      if (!res.ok) throw new Error();
+      const data = await res.json();
+      if (data && (data.percentage || data.price)) {
+        setCouponData({ percentage: data.percentage, price: data.price });
+        setCouponStatus('valid');
+      } else {
+        setCouponStatus('invalid');
+      }
+    } catch {
+      setCouponStatus('invalid');
+    }
+  };
+
+  // Calcolo prezzo scontato
+  const baseTotal = experience.price * participants;
+  let discount = 0;
+  if (couponData?.percentage) {
+    discount = Math.round(baseTotal * (couponData.percentage / 100));
+  } else if (couponData?.price) {
+    discount = Math.min(baseTotal, couponData.price);
+  }
+  const discountedTotal = baseTotal - discount;
+  const serviceFee = Math.round(discountedTotal * 0.09);
+  const villageFund = Math.round(discountedTotal * 0.03);
+  const finalTotal = discountedTotal + serviceFee + villageFund;
 
   const availableDates = [
     'April 20, 2025 - 10:00 AM',
@@ -200,6 +234,49 @@ const ExperienceDetail = ({ type }: ExperienceDetailProps) => {
                     </div>
                     
                     <div className="space-y-4 mb-6">
+                      {/* Coupon field */}
+                      <div className="border rounded-lg p-4">
+                        <div className="flex items-center mb-2">
+                          <span className="font-semibold text-italia-brown">Coupon</span>
+                        </div>
+                        <div className="flex gap-2">
+                          <input
+                            type="text"
+                            value={coupon}
+                            onChange={e => { setCoupon(e.target.value); setCouponStatus('idle'); }}
+                            placeholder="Enter coupon code"
+                            className="border rounded px-3 py-2 flex-1 text-sm"
+                          />
+                          <Button
+                            variant="outline"
+                            onClick={handleValidateCoupon}
+                            disabled={couponStatus === 'loading' || !coupon}
+                          >
+                            {couponStatus === 'loading' ? 'Validating...' : 'Apply'}
+                          </Button>
+                        </div>
+                        {couponStatus === 'valid' && couponData && (
+                          <div className="mt-3 flex flex-col gap-1">
+                            <div className="flex items-center gap-2 p-3 bg-green-100 border border-green-400 rounded-md text-green-900 text-base font-bold">
+                              <svg className="w-5 h-5 text-green-700 mr-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4" /></svg>
+                              Coupon:
+                              <span className="inline-block bg-green-600 text-white px-2 py-0.5 rounded ml-1">
+                                {couponData.percentage ? `-${couponData.percentage}%` : couponData.price ? `-€${couponData.price}` : ''}
+                              </span>
+                            </div>
+                            <div className="text-green-800 font-semibold text-base ml-2 flex items-center gap-2">
+                              <span className="inline-block bg-green-600 text-white px-2 py-0.5 rounded font-bold">You save:</span>
+                              {couponData.percentage ? `-€${Math.round((experience.price * participants + Math.round(experience.price * participants * 0.12)) * (couponData.percentage / 100))}` : couponData.price ? `-€${couponData.price}` : ''}
+                            </div>
+                          </div>
+                        )}
+                        {couponStatus === 'invalid' && (
+                          <div className="text-red-600 text-sm mt-2">
+                            Invalid coupon code
+                          </div>
+                        )}
+                      </div>
+                      
                       <div className="border rounded-lg p-4">
                         <div className="flex items-center mb-2">
                           <Calendar className="h-5 w-5 text-italia-sage mr-2" />
@@ -247,17 +324,24 @@ const ExperienceDetail = ({ type }: ExperienceDetailProps) => {
                       </div>
                     </div>
                     
+                    {/* Price breakdown */}
                     <div className="space-y-2 mb-6">
                       <div className="flex justify-between text-italia-brown dark:text-white">
                         <span>€{experience.price} x {participants} people</span>
-                        <span>€{experience.price * participants}</span>
+                        <span>€{baseTotal}</span>
                       </div>
+                      {discount > 0 && (
+                        <div className="flex justify-between text-green-700">
+                          <span>Coupon discount</span>
+                          <span>-€{discount}</span>
+                        </div>
+                      )}
                       <div className="flex justify-between text-italia-brown dark:text-white cursor-pointer group" onClick={() => alert('Service fee helps cover our operational costs and ensures a smooth booking experience.')}>
                         <span className="flex items-center">
                           Service fee (9%)
                           <span className="ml-2 text-xs text-italia-brown/50 group-hover:text-italia-brown">ⓘ</span>
                         </span>
-                        <span>€{Math.round(experience.price * participants * 0.09)}</span>
+                        <span>€{serviceFee}</span>
                       </div>
                       <div className="flex justify-between items-center bg-italia-mint/10 p-3 rounded-lg border border-italia-mint/20">
                         <span className="flex items-center text-italia-sage font-medium">
@@ -265,14 +349,14 @@ const ExperienceDetail = ({ type }: ExperienceDetailProps) => {
                           Village Fund
                           <span className="ml-2 text-xs bg-italia-sage/10 text-italia-sage px-2 py-0.5 rounded-full">3%</span>
                         </span>
-                        <span className="text-italia-sage font-medium">€{Math.round(experience.price * participants * 0.03)}</span>
+                        <span className="text-italia-sage font-medium">€{villageFund}</span>
                       </div>
                       <div className="text-xs text-muted-foreground dark:text-muted-foreground text-center italic">
                         Supporting local heritage preservation and sustainable tourism
                       </div>
                       <div className="flex justify-between font-bold pt-2 border-t mt-2 text-italia-brown dark:text-white">
                         <span>Total</span>
-                        <span>€{experience.price * participants + Math.round(experience.price * participants * 0.12)}</span>
+                        <span>€{finalTotal}</span>
                       </div>
                     </div>
                     

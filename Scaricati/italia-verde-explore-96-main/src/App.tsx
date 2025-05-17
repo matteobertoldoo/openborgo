@@ -11,6 +11,7 @@ import About from './pages/About';
 import Properties from './pages/Properties';
 import PropertyDetail from './pages/PropertyDetail';
 import Experiences from './pages/Experiences';
+import AccommodationDetail from './pages/AccommodationDetail';
 import { Toaster } from './components/ui/toaster';
 
 function App() {
@@ -22,7 +23,7 @@ function App() {
         <Route path="/regions/:id" element={<RegionDetail />} />
         <Route path="/villages/:id" element={<VillageDetail />} />
         <Route path="/accommodations" element={<Accommodations />} />
-        <Route path="/accommodations/:id" element={<PropertyDetail />} />
+        <Route path="/accommodations/:id" element={<AccommodationDetail />} />
         <Route path="/stays" element={<Accommodations />} />
         <Route path="/stays/:id" element={<PropertyDetail />} />
         <Route path="/experiences" element={<Experiences />} />

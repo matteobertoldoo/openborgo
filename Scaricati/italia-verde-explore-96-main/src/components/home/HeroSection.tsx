@@ -74,12 +74,11 @@ export default function HeroSection() {
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0" align="start">
                     <CalendarComponent
-                      initialFocus
                       mode="range"
-                      defaultMonth={date?.from}
                       selected={date}
                       onSelect={setDate}
                       numberOfMonths={2}
+                      initialFocus
                       className={cn("p-3 pointer-events-auto")}
                     />
                   </PopoverContent>
