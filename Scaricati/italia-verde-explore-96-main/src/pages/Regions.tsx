@@ -49,7 +49,7 @@ const Regions = () => {
               Italian Regions
             </h1>
             <p className="text-xl max-w-2xl">
-              Discover the unique charm and culture of Italy's diverse regions
+              Explore our hand-picked villages by region
             </p>
           </div>
         </section>

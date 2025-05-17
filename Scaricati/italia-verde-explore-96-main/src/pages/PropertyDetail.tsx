@@ -387,6 +387,16 @@ const PropertyDetail = () => {
             </div>
           </div>
         </section> */}
+
+        {/* After the search section, add the phrase and button */}
+        <div className="mt-8 flex flex-col items-center">
+          <p className="text-lg text-italia-brown mb-2 font-semibold">Not sure where to go? Explore all villages</p>
+          <Link to="/accommodations">
+            <Button className="bg-italia-sage hover:bg-italia-sage/90 text-white font-bold px-6 py-2 rounded-lg shadow">
+              Places to Stay
+            </Button>
+          </Link>
+        </div>
       </main>
       
       <Footer />

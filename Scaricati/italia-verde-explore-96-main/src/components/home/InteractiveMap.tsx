@@ -30,7 +30,7 @@ export default function InteractiveMap() {
             Explore Italia's Enchanting Regions
           </h2>
           <p className="text-lg text-gray-700">
-            Discover the heart and soul of Italy through its hidden villages, local traditions, and breathtaking landscapes.
+            Explore our hand-picked villages by regions.
           </p>
         </div>
         
@@ -48,35 +48,37 @@ export default function InteractiveMap() {
         {/* Region cards */}
         <div className="flex overflow-x-auto pb-4 gap-6">
           {regions.map((region) => (
-            <Card key={region.id} className="hover-lift overflow-hidden flex-shrink-0 w-[300px]">
-              <div className="h-48 overflow-hidden">
-                <img 
-                  src={region.image} 
-                  alt={region.name}
-                  className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
-                />
-              </div>
-              <CardHeader>
-                <div className="flex justify-between items-start">
-                  <CardTitle>{region.name}</CardTitle>
-                  {region.featured && <Badge variant="gold">Featured</Badge>}
+            <Card key={region.id} className="hover-lift overflow-hidden flex-shrink-0 w-[300px] flex flex-col justify-between">
+              <div>
+                <div className="h-48 overflow-hidden">
+                  <img 
+                    src={region.image} 
+                    alt={region.name}
+                    className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+                  />
                 </div>
-                <CardDescription>{region.description}</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-gray-500">
-                  {region.id === 'tuscany' ? '12' : 
-                   region.id === 'umbria' ? '8' : 
-                   region.id === 'puglia' ? '10' : 
-                   region.id === 'sicily' ? '15' : '6'} villages to explore
-                </p>
-              </CardContent>
-              <CardFooter>
+                <CardHeader>
+                  <div className="flex justify-between items-start">
+                    <CardTitle>{region.name}</CardTitle>
+                    {region.featured && <Badge variant="gold">Featured</Badge>}
+                  </div>
+                  <CardDescription>{region.description}</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-gray-500">
+                    {region.id === 'tuscany' ? '12' : 
+                     region.id === 'umbria' ? '8' : 
+                     region.id === 'puglia' ? '10' : 
+                     region.id === 'sicily' ? '15' : '6'} villages to explore
+                  </p>
+                </CardContent>
+              </div>
+              <CardFooter className="flex justify-center mt-auto">
                 <Button 
-                  className="w-full"
+                  className="w-full font-semibold"
                   onClick={() => navigate(`/regions/${region.id}`)}
                 >
-                  Explore Region
+                  {`Explore ${region.name}`}
                 </Button>
               </CardFooter>
             </Card>
@@ -84,11 +86,15 @@ export default function InteractiveMap() {
         </div>
         
         <div className="text-center mt-10">
+          <p className="mb-2 text-lg font-medium">
+            Not sure where to go?<br />
+            <span className="font-normal">Discover all stays in Italy's hidden villages</span>
+          </p>
           <Button 
             variant="outline"
             onClick={() => navigate('/regions')}
           >
-            View All Regions
+            View all villages
           </Button>
         </div>
       </div>

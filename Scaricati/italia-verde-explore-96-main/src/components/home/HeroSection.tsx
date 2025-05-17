@@ -114,6 +114,15 @@ export default function HeroSection() {
             </div>
           </div>
         </div>
+        {/* Phrase and button under search */}
+        <div className="mt-6 flex flex-col items-center">
+          <p className="text-lg text-white font-semibold drop-shadow mb-2">Not sure where to go? Explore all villages</p>
+          <Link to="/accommodations">
+            <Button className="bg-openborgo-sage hover:bg-openborgo-sage/90 text-white font-bold px-6 py-2 rounded-lg shadow">
+              Places to Stay
+            </Button>
+          </Link>
+        </div>
         
         {/* Scroll indicator */}
         <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2">
