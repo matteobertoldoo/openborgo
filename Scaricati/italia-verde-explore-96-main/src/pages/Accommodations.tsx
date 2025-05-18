@@ -5,7 +5,6 @@ import Footer from '@/components/Footer';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Search, MapPin, Star, Bed } from 'lucide-react';
-import CouponInput from '@/components/CouponInput';
 import { properties as mockProperties } from '@/data/mockData';
 
 const Accommodations = () => {
@@ -66,10 +65,9 @@ const Accommodations = () => {
                     onChange={(e) => setSearchQuery(e.target.value)}
                   />
                 </div>
-                <Button className="bg-italia-sage hover:bg-italia-sage/90">
+                <Button className="bg-italia-sage hover:bg-italia-sage/90 text-black">
                   Filter
                 </Button>
-                <CouponInput onCouponApplied={setDiscount} />
               </div>
             </div>
             {loading ? (
@@ -86,7 +84,7 @@ const Accommodations = () => {
                   }
                   const discountedPrice = calculateDiscountedPrice(accommodation.price);
                   return (
-                    <Link key={accommodation.id} to={`/accommodations/${accommodation.id}`} className="group">
+                    <Link key={accommodation.id} to={`/stays/${accommodation.id}`} className="group">
                       <div className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow h-full">
                         <div className="relative h-52">
                           <img 

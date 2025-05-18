@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -178,7 +177,7 @@ export default function FeaturedSection() {
                 </CardContent>
                 <CardFooter>
                   <Button className="w-full" asChild>
-                    <Link to={`/accommodations/${item.id}`}>
+                    <Link to={`/stays/${item.id}`}>
                       View Details
                     </Link>
                   </Button>
@@ -254,7 +253,7 @@ export default function FeaturedSection() {
                 </CardContent>
                 <CardFooter>
                   <Button className="w-full" asChild>
-                    <Link to={`/experiences/${item.id}`}>
+                    <Link to={`/stays/${item.id}`}>
                       View Details
                     </Link>
                   </Button>

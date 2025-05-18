@@ -3,47 +3,16 @@ import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import MapBox from '@/components/MapBox';
 import { regions } from '@/data/mockData';
 
 export default function InteractiveMap() {
   const navigate = useNavigate();
   const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
   
-  // Transform region data for the map
-  const mapMarkers = regions.map(region => ({
-    id: region.id,
-    coordinates: [region.coordinates.lat, region.coordinates.lng] as [number, number],
-    color: selectedRegion === region.id ? '#E53E3E' : (region.featured ? '#F59E0B' : '#3B82F6'),
-    popup: region.name
-  }));
-
-  const handleMarkerClick = (id: string) => {
-    navigate(`/regions/${id}`);
-  };
-  
   return (
     <section className="py-16 bg-openborgo-beige/30">
       <div className="container mx-auto px-4">
-        <div className="text-center max-w-3xl mx-auto mb-12">
-          <h2 className="font-playfair font-bold text-3xl md:text-4xl mb-4">
-            Explore Italia's Enchanting Regions
-          </h2>
-          <p className="text-lg text-gray-700">
-            Explore our hand-picked villages by regions.
-          </p>
-        </div>
-        
-        {/* Interactive Map */}
-        <div className="bg-white rounded-xl shadow-xl p-6 mb-10 relative overflow-hidden h-[500px]">
-          <MapBox 
-            center={[41.8719, 12.5674]} 
-            zoom={5} 
-            markers={mapMarkers}
-            onMarkerClick={handleMarkerClick}
-            height="420px"
-          />
-        </div>
+ 
         
         {/* Region cards */}
         <div className="flex overflow-x-auto pb-4 gap-6">
@@ -83,19 +52,6 @@ export default function InteractiveMap() {
               </CardFooter>
             </Card>
           ))}
-        </div>
-        
-        <div className="text-center mt-10">
-          <p className="mb-2 text-lg font-medium">
-            Not sure where to go?<br />
-            <span className="font-normal">Discover all stays in Italy's hidden villages</span>
-          </p>
-          <Button 
-            variant="outline"
-            onClick={() => navigate('/regions')}
-          >
-            View all villages
-          </Button>
         </div>
       </div>
     </section>
