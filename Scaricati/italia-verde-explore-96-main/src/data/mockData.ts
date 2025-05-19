@@ -596,6 +596,166 @@ export const properties: Property[] = [
     featured: true,
     coordinates: { lat: 43.0667, lng: 11.7667 },
   },
+  {
+    id: 'casa-boccaccio',
+    name: 'Casa Boccaccio',
+    type: 'apartment',
+    location: 'Certaldo, Tuscany',
+    regionId: 'tuscany',
+    price: 110,
+    perNight: true,
+    images: [
+      'https://certaldo-api.municipiumapp.it/s3/1982/media/luoghi/casaboccaccio.jpg',
+      'https://tourismmedia.italia.it/is/image/mitur/20230224160239_casa-di-boccaccio---comune-di-certaldo_3?wid=850&hei=500&fit=constrain,1&fmt=webp',
+      'https://www.mu-dev.it/wp-content/uploads/2023/05/IRE1520.jpg'
+    ],
+    description: 'A historic apartment in the heart of Certaldo Alto, just steps from Boccaccio\'s house and Palazzo Pretorio. Perfect for immersing yourself in the medieval atmosphere of the village.',
+    amenities: [
+      'WiFi',
+      'Kitchen',
+      'Air conditioning',
+      'Panoramic view',
+      'Historic center',
+      'Washer',
+      'Coffee machine',
+      'Books about Boccaccio',
+      'Private balcony',
+      'Smart TV',
+      'Heating',
+      'Welcome basket with local products'
+    ],
+    rating: 4.8,
+    reviewCount: 19,
+    featured: false,
+    coordinates: { lat: 43.5483, lng: 11.0422 },
+    // Additional info (not required by type, but can be used in UI if needed)
+    extraInfo: {
+      historicalNote: "This apartment is located in a building dating back to the 14th century, once frequented by Giovanni Boccaccio himself. The interiors preserve original terracotta floors and wooden beams.",
+      guestAccess: "Guests have exclusive access to the entire apartment, including a private balcony overlooking the rooftops of Certaldo Alto.",
+      nearby: [
+        "Boccaccio's House Museum (1 min walk)",
+        "Palazzo Pretorio (2 min walk)",
+        "Funicular to Certaldo Basso (3 min walk)",
+        "Local restaurants and artisan shops"
+      ],
+      idealFor: "Couples, writers, and history lovers seeking an authentic Tuscan village experience.",
+      sustainability: "The property uses eco-friendly cleaning products and supports local producers for welcome gifts."
+    }
+  },
+  {
+    id: 'palazzo-pretorio-suite',
+    name: 'Palazzo Pretorio Suite',
+    type: 'apartment',
+    location: 'Certaldo, Tuscany',
+    regionId: 'tuscany',
+    price: 140,
+    perNight: true,
+    images: [
+      'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/25/0a/b4/03/palazzo-pretorio-inner.jpg?w=1200&h=-1&s=1',
+      ''
+    ],
+    description: 'Suite elegante in un palazzo storico con vista sulle colline della Val d\'Elsa.',
+    amenities: ['WiFi', 'Colazione inclusa', 'Aria condizionata', 'Centro storico'],
+    rating: 4.9,
+    reviewCount: 11,
+    featured: false,
+    coordinates: { lat: 43.5483, lng: 11.0422 },
+  },
+  {
+    id: 'casa-vecchia',
+    name: 'Casa Vecchia',
+    type: 'farmhouse',
+    location: 'Civita di Bagnoregio, Umbria',
+    regionId: 'umbria',
+    price: 95,
+    perNight: true,
+    images: [
+      'https://images.unsplash.com/photo-1512917774080-9991f1c4c750',
+      'https://images.unsplash.com/photo-1512918728675-ed5a9dbdeafd',
+    ],
+    description: 'A charming restored farmhouse with original features, offering a peaceful retreat in the Umbrian countryside.',
+    amenities: ['Original features', 'WiFi', 'Kitchen', 'Garden', 'Parking', 'Fireplace'],
+    rating: 4.7,
+    reviewCount: 33,
+    featured: false,
+    coordinates: { lat: 42.6278, lng: 12.1139 },
+  },
+  {
+    id: 'casa-madonie',
+    name: 'Casa Madonie',
+    type: 'apartment',
+    location: 'Gangi, Sicily',
+    regionId: 'sicily',
+    price: 75,
+    perNight: true,
+    images: [
+      'https://images.unsplash.com/photo-1512918728675-ed5a9dbdeafd',
+      'https://images.unsplash.com/photo-1512917774080-9991f1c4c750',
+    ],
+    description: 'A cozy apartment with views of the Madonie mountains, located in the historic center of Gangi.',
+    amenities: ['Mountain view', 'WiFi', 'Kitchen', 'Central location', 'Air conditioning'],
+    rating: 4.5,
+    reviewCount: 27,
+    featured: false,
+    coordinates: { lat: 37.7983, lng: 14.2072 },
+  },
+  {
+    id: 'trulli-paradiso',
+    name: 'Trulli Paradiso',
+    type: 'cottage',
+    location: 'Alberobello, Puglia',
+    regionId: 'puglia',
+    price: 105,
+    perNight: true,
+    images: [
+      'https://images.unsplash.com/photo-1512917774080-9991f1c4c750',
+      'https://images.unsplash.com/photo-1512918728675-ed5a9dbdeafd',
+    ],
+    description: 'A beautifully restored trullo with a private garden, offering a unique and authentic Puglian experience.',
+    amenities: ['Garden', 'Unique architecture', 'WiFi', 'Kitchen', 'Air conditioning'],
+    rating: 4.8,
+    reviewCount: 41,
+    featured: true,
+    coordinates: { lat: 40.7864, lng: 17.2402 },
+  },
+  {
+    id: 'villa-chianti',
+    name: 'Villa Chianti',
+    type: 'villa',
+    location: 'Chianti, Tuscany',
+    regionId: 'tuscany',
+    price: 350,
+    perNight: true,
+    images: [
+      'https://images.unsplash.com/photo-1512918728675-ed5a9dbdeafd',
+      'https://images.unsplash.com/photo-1512917774080-9991f1c4c750',
+    ],
+    description: 'Luxurious villa in the heart of Chianti with panoramic views, private pool, and wine cellar.',
+    amenities: ['Pool', 'Wine cellar', 'WiFi', 'Kitchen', 'Parking', 'Air conditioning', 'Garden'],
+    rating: 4.9,
+    reviewCount: 67,
+    featured: true,
+    coordinates: { lat: 43.6833, lng: 11.3167 },
+  },
+  {
+    id: 'agriturismo-val-dorcia',
+    name: 'Agriturismo Val d\'Orcia',
+    type: 'farmhouse',
+    location: 'Val d\'Orcia, Tuscany',
+    regionId: 'tuscany',
+    price: 200,
+    perNight: true,
+    images: [
+      'https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07',
+      'https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9',
+    ],
+    description: 'Authentic farmhouse with organic farm, cooking classes, and stunning views of the Val d\'Orcia.',
+    amenities: ['Organic farm', 'Cooking classes', 'WiFi', 'Kitchen', 'Parking', 'Garden', 'Pool'],
+    rating: 4.8,
+    reviewCount: 45,
+    featured: true,
+    coordinates: { lat: 43.0667, lng: 11.7667 },
+  },
 ];
 
 export const experiences: Experience[] = [
@@ -1092,6 +1252,24 @@ export const villages: Village[] = [
     coordinates: { lat: 43.4000, lng: 10.8667 },
     featured: true
   },
+  {
+    id: 'certaldo',
+    name: 'Certaldo',
+    regionId: 'tuscany',
+    description: "Certaldo is a medieval village known for its red walls, Boccaccio house, and the charming cobbled streets that dominate the Val d'Elsa.",
+    population: 16000,
+    elevation: 67,
+    image: 'https://www.lanazione.it/image-service/view/acePublic/alias/contentid/MzhmYzdhYjAtZWY2Mi00/1/image.webp?f=16%3A9&q=1&w=1280',
+    highlights: [
+      "Giovanni Boccaccio's House",
+      'Palazzo Pretorio',
+      'Historic funicular',
+      'Certaldo Onion Festival'
+    ],
+    historicalNotes: "Certaldo is renowned as the birthplace of Giovanni Boccaccio and for its perfectly preserved historic center, which hosts cultural and gastronomic events every year.",
+    coordinates: { lat: 43.5483, lng: 11.0422 },
+    featured: false
+  }
 ];
 
 export const events: Event[] = [
