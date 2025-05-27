@@ -121,7 +121,7 @@ const About = () => {
               <div className="bg-white p-6 rounded-lg shadow-md text-center">
                 <div className="w-32 h-32 rounded-full bg-italia-sage/10 mx-auto mb-4 flex items-center justify-center overflow-hidden">
                   <img
-                    src="https://randomuser.me/api/portraits/women/44.jpg"
+                    src="https://media.licdn.com/dms/image/v2/D4D35AQEmHMfaC1Ea2A/profile-framedphoto-shrink_200_200/profile-framedphoto-shrink_200_200/0/1694691073499?e=1748962800&v=beta&t=i2AggOfucHy9PPqGFL2qlYPK2Y-ycmmiyvpD5ZrryX0"
                     alt="Kalinina Nataliia"
                     className="w-full h-full object-cover"
                   />
@@ -147,7 +147,7 @@ const About = () => {
               <div className="bg-white p-6 rounded-lg shadow-md text-center">
                 <div className="w-32 h-32 rounded-full bg-italia-sage/10 mx-auto mb-4 flex items-center justify-center overflow-hidden">
                   <img
-                    src="https://randomuser.me/api/portraits/men/76.jpg"
+                    src="../../public/photo_2025-05-27_16-25-14.jpg"
                     alt="Li Lin"
                     className="w-full h-full object-cover"
                   />
@@ -160,7 +160,7 @@ const About = () => {
               <div className="bg-white p-6 rounded-lg shadow-md text-center">
                 <div className="w-32 h-32 rounded-full bg-italia-sage/10 mx-auto mb-4 flex items-center justify-center overflow-hidden">
                   <img
-                    src="https://media.licdn.com/dms/image/v2/D4D35AQFCxGMO_4bc5Q/profile-framedphoto-shrink_200_200/B4DZYkOxWRHIAY-/0/1744364574370?e=1747663200&v=beta&t=zgz26p7FrZ6iO0YIQi4u8Nk-mnw9xNYg0ci96iYgppY"
+                    src="https://media.licdn.com/dms/image/v2/D4D35AQFCxGMO_4bc5Q/profile-framedphoto-shrink_200_200/B4DZYkOxWRHIAY-/0/1744364574370?e=1748962800&v=beta&t=RSQ5ATT6V8krDXc3jqv2aCAiLdGTdHG_oAm3HcgThqY"
                     alt="Camarda Alba"
                     className="w-full h-full object-cover"
                   />
@@ -192,9 +192,6 @@ const About = () => {
             <div className="max-w-2xl mx-auto">
               <p className="text-lg mb-4 text-gray-700">
                 Email: <a href="mailto:openborgo@gmail.com" className="text-italia-sage hover:text-italia-sage/80">openborgo@gmail.com</a>
-              </p>
-              <p className="text-lg text-gray-700">
-                Phone: <a href="tel:+393922679119" className="text-italia-sage hover:text-italia-sage/80">+39 392 267 9119</a>
               </p>
             </div>
           </div>
