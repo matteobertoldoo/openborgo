@@ -10,6 +10,7 @@ import { format } from 'date-fns';
 import { DateRange } from 'react-day-picker';
 import { cn } from '@/lib/utils';
 import CouponInput from '@/components/CouponInput';
+import { experiences as mockExperiences } from '@/data/mockData';
 
 const Experiences = () => {
   const [location, setLocation] = useState('');
@@ -19,57 +20,12 @@ const Experiences = () => {
   });
   const [type, setType] = useState('');
   const [discount, setDiscount] = useState<{ type: 'percentage' | 'price', value: number } | null>(null);
-
-  const experiences = [
-    {
-      id: 1,
-      title: "Traditional Pasta Making Class",
-      location: "San Gimignano, Tuscany",
-      price: 75,
-      duration: "3 hours",
-      image: "https://images.unsplash.com/photo-1551183053-bf91a1d81141?ixlib=rb-4.0.3",
-      rating: 4.9,
-      reviews: 128,
-      description: "Learn the art of making traditional Italian pasta from local chefs in a historic Tuscan village."
-    },
-    {
-      id: 2,
-      title: "Vineyard Tour & Wine Tasting",
-      location: "Montepulciano, Tuscany",
-      price: 65,
-      duration: "4 hours",
-      image: "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?ixlib=rb-4.0.3",
-      rating: 4.8,
-      reviews: 95,
-      description: "Explore ancient vineyards and taste award-winning wines in the heart of Tuscany."
-    },
-    {
-      id: 3,
-      title: "Olive Oil Making Workshop",
-      location: "Spello, Umbria",
-      price: 55,
-      duration: "2.5 hours",
-      image: "https://images.unsplash.com/photo-1519735777090-95e697d571fb?ixlib=rb-4.0.3",
-      rating: 4.7,
-      reviews: 82,
-      description: "Discover the traditional methods of olive oil production and taste different varieties."
-    },
-    {
-      id: 4,
-      title: "Truffle Hunting Experience",
-      location: "Norcia, Umbria",
-      price: 120,
-      duration: "5 hours",
-      image: "https://images.unsplash.com/photo-1515443961218-a51367888e4b?ixlib=rb-4.0.3",
-      rating: 4.9,
-      reviews: 64,
-      description: "Join expert truffle hunters and their dogs in search of the prized black truffle."
-    }
-  ];
+  // Usa solo i mock, nessun fetch
+  const [experiences] = useState<any[]>(mockExperiences);
+  const [loading] = useState(false);
 
   const calculateDiscountedPrice = (originalPrice: number) => {
     if (!discount) return originalPrice;
-    
     if (discount.type === 'percentage') {
       return originalPrice * (1 - discount.value / 100);
     } else {
@@ -80,6 +36,19 @@ const Experiences = () => {
   const handleCouponApplied = (newDiscount: { type: 'percentage' | 'price', value: number }) => {
     setDiscount(newDiscount);
   };
+
+  // Filtro base (se vuoi filtrare per location/type/date, aggiungi qui)
+  const filteredExperiences = experiences.filter(exp => {
+    let match = true;
+    if (location && !exp.location?.toLowerCase().includes(location.toLowerCase())) match = false;
+    if (type && exp.type !== type) match = false;
+    // Puoi aggiungere filtro per date se necessario
+    return match;
+  });
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -188,14 +157,16 @@ const Experiences = () => {
         <section className="py-16">
           <div className="container mx-auto px-4">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {experiences.map((experience) => {
+              {filteredExperiences.map((experience) => {
                 const discountedPrice = calculateDiscountedPrice(experience.price);
+                // Usa experience.image o il primo delle images
+                const imageSrc = experience.image || (experience.images && experience.images[0]) || '';
                 return (
                   <div key={experience.id} className="bg-white rounded-lg shadow-lg overflow-hidden">
                     <div className="relative h-48">
                       <img
-                        src={experience.image} 
-                        alt={experience.title}
+                        src={imageSrc}
+                        alt={experience.title || experience.name}
                         className="w-full h-full object-cover"
                       />
                       <div className="absolute top-4 right-4 bg-white/90 px-2 py-1 rounded-full text-sm font-semibold">
@@ -207,10 +178,10 @@ const Experiences = () => {
                         ) : (
                           `€${experience.price}`
                         )}
-                          </div>
-                        </div>
+                      </div>
+                    </div>
                     <div className="p-6">
-                      <h3 className="text-xl font-bold mb-2 text-italia-brown">{experience.title}</h3>
+                      <h3 className="text-xl font-bold mb-2 text-italia-brown">{experience.title || experience.name}</h3>
                       <p className="text-gray-600 mb-4">{experience.description}</p>
                       <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
                         <div className="flex items-center">
@@ -223,9 +194,13 @@ const Experiences = () => {
                         <div className="flex items-center">
                           <span className="text-yellow-400 mr-1">★</span>
                           <span className="font-semibold">{experience.rating}</span>
-                          <span className="text-gray-500 ml-1">({experience.reviews} reviews)</span>
+                          <span className="text-gray-500 ml-1">({experience.reviewCount || experience.reviews} reviews)</span>
                         </div>
-                        <Button className="bg-italia-sage hover:bg-italia-sage/90" asChild>
+                        <Button
+                          style={{ backgroundColor: '#22c55e' }} // tailwind green-500
+                          className="hover:bg-green-600 text-black font-bold"
+                          asChild
+                        >
                           <Link to={`/experiences/${experience.id}`}>View Details</Link>
                         </Button>
                       </div>
@@ -243,4 +218,4 @@ const Experiences = () => {
   );
 };
 
-export default Experiences; 
+export default Experiences;

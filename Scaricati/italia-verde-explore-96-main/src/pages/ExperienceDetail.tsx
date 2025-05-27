@@ -4,10 +4,9 @@ import { ChevronLeft, Star, MapPin, Calendar, Users, Clock, UtensilsCrossed, Bik
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { experiences } from '@/data/mockData';
+import { experiences as mockExperiences } from '@/data/mockData';
 import Footer from "@/components/Footer";
 import NotFound from './NotFound';
-import { Experience } from '../data/mockData';
 
 interface ExperienceDetailProps {
   type?: 'food' | 'outdoor' | 'culture' | 'wellness';
@@ -21,20 +20,24 @@ const ExperienceDetail = ({ type }: ExperienceDetailProps) => {
   const [coupon, setCoupon] = useState('');
   const [couponStatus, setCouponStatus] = useState<'idle' | 'valid' | 'invalid' | 'loading'>('idle');
   const [couponData, setCouponData] = useState<{ percentage?: number; price?: number } | null>(null);
-  
+  const [experience, setExperience] = useState<any>(null);
+
   // Scroll to top on mount
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-  
-  // Find the experience by ID and type if provided
-  const experience = experiences.find(e => {
-    if (type) {
-      return e.id === id && e.type === type;
-    }
-    return e.id === id;
-  });
-  
+
+  useEffect(() => {
+    // Prova a prendere da API, fallback ai mock
+    fetch(`https://italia-verde-explore-fork.onrender.com/api/experiences/${id}`)
+      .then(res => res.ok ? res.json() : Promise.reject())
+      .then(data => setExperience(data))
+      .catch(() => {
+        const fallback = mockExperiences.find(e => e.id === id);
+        setExperience(fallback || null);
+      });
+  }, [id]);
+
   // If experience not found, return 404
   if (!experience) {
     return <NotFound />;
@@ -384,7 +387,7 @@ const ExperienceDetail = ({ type }: ExperienceDetailProps) => {
             <h2 className="text-2xl font-playfair font-bold mb-6 text-italia-brown">Similar experiences you might like</h2>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {experiences
+              {mockExperiences
                 .filter(e => e.id !== experience.id && e.regionId === experience.regionId)
                 .slice(0, 3)
                 .map(similarExperience => (
