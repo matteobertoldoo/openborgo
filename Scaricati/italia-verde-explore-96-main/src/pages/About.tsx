@@ -147,7 +147,7 @@ const About = () => {
               <div className="bg-white p-6 rounded-lg shadow-md text-center">
                 <div className="w-32 h-32 rounded-full bg-italia-sage/10 mx-auto mb-4 flex items-center justify-center overflow-hidden">
                   <img
-                    src="../../public/photo_2025-05-27_16-25-14.jpg"
+                    src="https://github.com/matteobertoldoo/openborgo/blob/main/Scaricati/italia-verde-explore-96-main/public/photo_2025-05-27_16-25-14.jpg?raw=true"
                     alt="Li Lin"
                     className="w-full h-full object-cover"
                   />
