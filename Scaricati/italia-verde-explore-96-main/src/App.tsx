@@ -13,6 +13,7 @@ import PropertyDetail from './pages/PropertyDetail';
 import Experiences from './pages/Experiences';
 import AccommodationDetail from './pages/AccommodationDetail';
 import { Toaster } from './components/ui/toaster';
+import Sustainability from './pages/Sustainability';
 
 function App() {
   return (
@@ -30,7 +31,7 @@ function App() {
         <Route path="/experiences/:id" element={<ExperienceDetail />} />
         <Route path="/events" element={<Events />} />
         <Route path="/events/:id" element={<EventDetail />} />
-        <Route path="/sustainability" element={<div>Sustainability Page</div>} />
+        <Route path="/sustainability" element={<Sustainability />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<div>Contact Page</div>} />
         <Route path="/properties" element={<Properties />} />

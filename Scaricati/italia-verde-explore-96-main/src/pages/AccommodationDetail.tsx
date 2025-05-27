@@ -22,8 +22,6 @@ const AccommodationDetail = () => {
     to: undefined,
   });
   const [guests, setGuests] = useState(1);
-  const [couponInput, setCouponInput] = useState('');
-  const [couponStatus, setCouponStatus] = useState<'idle' | 'loading' | 'valid' | 'invalid'>('idle');
   const [couponData, setCouponData] = useState<{ percentage?: number; price?: number } | null>(null);
 
   useEffect(() => {
@@ -39,25 +37,6 @@ const AccommodationDetail = () => {
         setLoading(false);
       });
   }, [id]);
-
-  const handleValidateCoupon = async () => {
-    if (!couponInput) return;
-    
-    setCouponStatus('loading');
-    setCouponData(null);
-    try {
-      const res = await fetch(`https://italia-verde-explore-fork.onrender.com/api/coupons/?code=${encodeURIComponent(couponInput)}`);
-      const data = await res.json();
-      if (res.ok && data.length > 0 && (data[0].percentage || data[0].price)) {
-        setCouponData({ percentage: data[0].percentage, price: data[0].price });
-        setCouponStatus('valid');
-      } else {
-        setCouponStatus('invalid');
-      }
-    } catch {
-      setCouponStatus('invalid');
-    }
-  };
 
   const calculateTotalNights = () => {
     if (!date?.from || !date?.to) return 0;
@@ -191,7 +170,9 @@ const AccommodationDetail = () => {
                       <span>
                         {couponData.percentage
                           ? `-${couponData.percentage}%`
-                          : `-€${couponData.price}`}
+                          : couponData.price
+                          ? `-€${couponData.price}`
+                          : ''}
                       </span>
                     </div>
                   )}
@@ -214,11 +195,28 @@ const AccommodationDetail = () => {
                     />
                     {couponStatus === 'valid' && couponData && (
                       <div className="mt-3 p-2 bg-green-50 border border-green-200 rounded-md text-green-700 text-sm font-medium">
-                        Coupon applicato: {couponData.percentage
+                        Coupon applicato: {couponData && typeof couponData.percentage === 'number'
                           ? `-${couponData.percentage}%`
-                          : couponData.price
+                          : couponData && typeof couponData.price === 'number'
                           ? `-€${couponData.price}`
                           : ''}
+                        <br />
+                        {(() => {
+                          // Calcola il risparmio effettivo
+                          const nights = calculateTotalNights();
+                          const baseTotal = accommodation.price * nights;
+                          let discount = 0;
+                          if (couponData.percentage) {
+                            discount = Math.round(baseTotal * (couponData.percentage / 100));
+                          } else if (couponData.price) {
+                            discount = Math.min(baseTotal, couponData.price);
+                          }
+                          return (
+                            <span>
+                              You save: -€{discount}
+                            </span>
+                          );
+                        })()}
                       </div>
                     )}
                     {couponStatus === 'invalid' && (

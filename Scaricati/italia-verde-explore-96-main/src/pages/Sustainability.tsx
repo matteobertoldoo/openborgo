@@ -34,10 +34,17 @@ const Sustainability = () => {
                 <p className="text-lg text-gray-700">
                   We work closely with local communities to ensure that tourism benefits everyone while preserving the authentic character of Italy's rural villages.
                 </p>
+                {/* 3% Village Fund Donation Section */}
+                <div className="mt-8 bg-italia-sage/10 border-l-4 border-italia-sage p-6 rounded-lg">
+                  <h3 className="text-2xl font-bold text-italia-sage mb-2">3% Donated to Village Fund</h3>
+                  <p className="text-gray-700">
+                    We are committed to giving back: <span className="font-semibold">3% of all our revenues are donated to the Village Fund</span>, a dedicated initiative to support local heritage, nature conservation, and community projects in the villages we work with. By traveling with us, you directly contribute to the preservation of Italy's unique cultural and natural treasures.
+                  </p>
+                </div>
               </div>
               <div className="rounded-lg overflow-hidden shadow-xl">
                 <img 
-                  src="https://images.unsplash.com/photo-1472214103451-9374bd1c798e?ixlib=rb-4.0.3" 
+                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ29j2ztENg43AqAXpN2YcbOzJ0rXm12yU3rA&s" 
                   alt="Sustainable tourism" 
                   className="w-full h-full object-cover"
                 />
@@ -88,24 +95,6 @@ const Sustainability = () => {
             </div>
           </div>
         </section>
-
-        {/* Call to Action */}
-        <section className="py-16 bg-italia-cream">
-          <div className="container mx-auto px-4 text-center">
-            <h2 className="text-3xl font-playfair font-bold mb-6 text-italia-brown">Join Our Sustainable Journey</h2>
-            <p className="text-lg mb-8 max-w-2xl mx-auto text-gray-700">
-              Together, we can make a difference in preserving Italy's cultural heritage while promoting responsible tourism.
-            </p>
-            <div className="flex flex-col sm:flex-row justify-center gap-4">
-              <a href="/contact" className="inline-block px-6 py-3 bg-italia-sage text-white rounded-lg hover:bg-italia-sage/90">
-                Get Involved
-              </a>
-              <a href="/about" className="inline-block px-6 py-3 border border-italia-sage text-italia-sage rounded-lg hover:bg-italia-sage/10">
-                Learn More
-              </a>
-            </div>
-          </div>
-        </section>
       </main>
       
       <Footer />
@@ -113,4 +102,4 @@ const Sustainability = () => {
   );
 };
 
-export default Sustainability; 
+export default Sustainability;

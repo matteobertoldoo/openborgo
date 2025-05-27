@@ -85,7 +85,14 @@ const PropertyDetail = () => {
       const res = await fetch(`https://italia-verde-explore-fork.onrender.com/api/coupons/?code=${encodeURIComponent(couponInput)}`);
       const data = await res.json();
       if (res.ok && data.length > 0 && (data[0].percentage || data[0].price)) {
-        setCouponData({ percentage: data[0].percentage, price: data[0].price });
+        // Support both price as number and as object with value
+        let priceValue = null;
+        if (typeof data[0].price === 'object' && data[0].price !== null && typeof data[0].price.value === 'number') {
+          priceValue = data[0].price.value;
+        } else if (typeof data[0].price === 'number') {
+          priceValue = data[0].price;
+        }
+        setCouponData({ percentage: data[0].percentage, price: priceValue });
         setCouponStatus('valid');
       } else {
         setCouponStatus('invalid');
@@ -98,12 +105,12 @@ const PropertyDetail = () => {
   const calculateTotalPrice = () => {
     const baseTotal = property.price * nights + Math.round(property.price * nights * 0.12);
     let discount = 0;
-    if (couponData?.percentage) {
+    if (couponData && typeof couponData.percentage === 'number' && couponData.percentage > 0) {
       discount = Math.round(baseTotal * (couponData.percentage / 100));
-    } else if (couponData?.price) {
+    } else if (couponData && typeof couponData.price === 'number' && couponData.price > 0) {
       discount = Math.min(baseTotal, couponData.price);
     }
-    return baseTotal - discount;
+    return Math.max(0, baseTotal - discount);
   };
 
   return (
@@ -284,12 +291,12 @@ const PropertyDetail = () => {
                       </div>
                       <div className="my-4 border-2 border-dashed border-italia-sage/30 rounded-lg p-4 bg-italia-sage/5">
                         <label className="block text-lg font-semibold mb-3 text-italia-brown flex items-center gap-2">
-                          Hai un coupon?
+                          Do you have a coupon?
                         </label>
                         <div className="flex gap-2">
                           <Input
                             type="text"
-                            placeholder="Inserisci il codice coupon"
+                            placeholder="Enter the coupon code"
                             value={couponInput}
                             onChange={e => {
                               setCouponInput(e.target.value.toUpperCase());
@@ -304,7 +311,7 @@ const PropertyDetail = () => {
                             onClick={handleValidateCoupon}
                             disabled={!couponInput || couponStatus === 'loading'}
                           >
-                            {couponStatus === 'loading' ? 'Verifica...' : 'Verifica'}
+                            {couponStatus === 'loading' ? 'Verify...' : 'Verify'}
                           </Button>
                         </div>
                         {couponStatus === 'valid' && couponData && (
@@ -313,13 +320,21 @@ const PropertyDetail = () => {
                               <svg className="w-7 h-7 text-green-700 mr-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4" /></svg>
                               <span className="text-green-900 font-bold text-lg">Coupon:</span>
                               <span className="inline-block bg-green-600 text-white px-3 py-1 rounded text-lg font-bold ml-1">
-                                {couponData.percentage ? `-${couponData.percentage}%` : couponData.price ? `-€${couponData.price}` : ''}
+                                {(typeof couponData.percentage === 'number' && couponData.percentage > 0)
+                                  ? `-${couponData.percentage}%`
+                                  : (typeof couponData.price === 'number' && couponData.price > 0)
+                                  ? `-€${couponData.price}`
+                                  : <span className="text-gray-400">N/A</span>}
                               </span>
                             </div>
                             <div className="flex items-center gap-2 mt-2">
                               <span className="inline-block bg-green-600 text-white px-3 py-1 rounded font-bold text-lg">You save:</span>
                               <span className="text-green-800 font-bold text-lg">
-                                {couponData.percentage ? `-€${Math.round((property.price * nights + Math.round(property.price * nights * 0.12)) * (couponData.percentage / 100))}` : couponData.price ? `-€${couponData.price}` : ''}
+                                {(typeof couponData.percentage === 'number' && couponData.percentage > 0)
+                                  ? `-€${Math.round((property.price * nights + Math.round(property.price * nights * 0.12)) * (couponData.percentage / 100))}`
+                                  : (typeof couponData.price === 'number' && couponData.price > 0)
+                                  ? `-€${couponData.price}`
+                                  : <span className="text-gray-400">0</span>}
                               </span>
                             </div>
                           </div>
@@ -332,7 +347,7 @@ const PropertyDetail = () => {
                       </div>
                       <div className="flex justify-between font-bold pt-2 border-t mt-2 text-italia-brown dark:text-white">
                         <span>Total</span>
-                        <span>€{calculateTotalPrice()}</span>
+                        <span>€{!isNaN(calculateTotalPrice()) ? calculateTotalPrice() : 0}</span>
                       </div>
                     </div>
                     

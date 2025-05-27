@@ -3,67 +3,90 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { toast } from 'sonner';
 
+type CouponData = { percentage?: number; price?: number } | null;
+
 interface CouponInputProps {
-  onCouponApplied: (discount: { type: 'percentage' | 'price', value: number }) => void;
+  accommodationPrice: number;
+  nights: number;
+  onCouponValidated: (data: CouponData) => void;
 }
 
-const CouponInput: React.FC<CouponInputProps> = ({ onCouponApplied }) => {
-  const [couponCode, setCouponCode] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+const CouponInput = ({ accommodationPrice, nights, onCouponValidated }: CouponInputProps) => {
+  const [couponInput, setCouponInput] = useState('');
+  const [couponStatus, setCouponStatus] = useState<'idle' | 'loading' | 'valid' | 'invalid'>('idle');
+  const [couponData, setCouponData] = useState<CouponData>(null);
 
-  const validateCoupon = async () => {
-    if (!couponCode.trim()) {
-      toast.error('Please enter a coupon code');
-      return;
-    }
-
-    setIsLoading(true);
+  const handleValidateCoupon = async () => {
+    if (!couponInput) return;
+    setCouponStatus('loading');
+    setCouponData(null);
     try {
-      const response = await fetch(`https://italia-verde-explore-fork.onrender.com/api/coupons/?code=${couponCode}`);
-      const data = await response.json();
-
-      if (response.ok && data.length > 0) {
-        const coupon = data[0];
-        if (coupon.percentage) {
-          onCouponApplied({ type: 'percentage', value: coupon.percentage });
-          toast.success(`Coupon applied! ${coupon.percentage}% discount`);
-        } else if (coupon.price) {
-          onCouponApplied({ type: 'price', value: coupon.price });
-          toast.success(`Coupon applied! €${coupon.price} discount`);
-        } else {
-          toast.error('Coupon not valid for this offer');
-        }
+      const res = await fetch(`https://italia-verde-explore-fork.onrender.com/api/coupons/?code=${encodeURIComponent(couponInput)}`);
+      const data = await res.json();
+      if (res.ok && data.length > 0 && (data[0].percentage || data[0].price)) {
+        const validData = { percentage: Number(data[0].percentage), price: Number(data[0].price) };
+        setCouponData(validData);
+        setCouponStatus('valid');
+        onCouponValidated(validData);
       } else {
-        toast.error('Invalid coupon code');
+        setCouponStatus('invalid');
+        setCouponData(null);
+        onCouponValidated(null);
       }
-    } catch (error) {
-      toast.error('Error validating coupon');
-    } finally {
-      setIsLoading(false);
+    } catch {
+      setCouponStatus('invalid');
+      setCouponData(null);
+      onCouponValidated(null);
     }
   };
 
+  let discount = 0;
+  if (couponData && nights > 0) {
+    const baseTotal = accommodationPrice * nights;
+    if (couponData.percentage) {
+      discount = Math.round(baseTotal * (couponData.percentage / 100));
+    } else if (couponData.price) {
+      discount = Math.min(baseTotal, couponData.price);
+    }
+  }
+
   return (
-    <div className="flex flex-col gap-3">
-      <div className="text-sm text-italia-brown/70">
-        Enter a valid coupon code to get a discount on your stay
-      </div>
-      <div className="flex gap-2">
-        <Input
-          type="text"
-          placeholder="Enter coupon code"
-          value={couponCode}
-          onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
-          className="flex-1 text-lg font-mono tracking-wider placeholder:text-italia-brown/40"
-        />
-        <Button 
-          onClick={validateCoupon}
-          disabled={isLoading}
-          className="bg-italia-sage hover:bg-italia-sage/90 text-white px-6"
-        >
-          {isLoading ? 'Checking...' : 'Apply'}
-        </Button>
-      </div>
+    <div className="my-4 border-2 border-dashed border-italia-sage/30 rounded-lg p-4 bg-italia-sage/5">
+      <label className="block text-lg font-semibold mb-3 text-italia-brown flex items-center gap-2">
+        <span className="bg-italia-sage text-white p-1 rounded-md text-xs border border-italia-sage dark:bg-italia-sage dark:text-white dark:border-italia-sage">SAVE</span>
+        Hai un coupon?
+      </label>
+      <Input
+        type="text"
+        placeholder="Inserisci il codice coupon"
+        value={couponInput}
+        onChange={e => {
+          setCouponInput(e.target.value.toUpperCase());
+          setCouponStatus('idle');
+        }}
+        onBlur={handleValidateCoupon}
+        className="w-full"
+      />
+      {couponStatus === 'valid' && couponData && (
+        <div className="mt-3 p-2 bg-green-50 border border-green-200 rounded-md text-green-700 text-sm font-medium">
+          Coupon applicato: {couponData.percentage
+            ? `-${couponData.percentage}%`
+            : couponData.price
+            ? `-€${couponData.price}`
+            : ''}
+          <br />
+          {discount > 0 && (
+            <span>
+              You save: -€{discount}
+            </span>
+          )}
+        </div>
+      )}
+      {couponStatus === 'invalid' && (
+        <div className="mt-3 p-2 bg-red-50 border border-red-200 rounded-md text-red-700 text-sm font-medium">
+          Coupon non valido
+        </div>
+      )}
     </div>
   );
 };

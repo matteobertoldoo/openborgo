@@ -1361,3 +1361,6 @@ export const events: Event[] = [
     contactInfo: 'info@festavendemmia.it'
   }
 ];
+
+// Newsletter signups (mock/demo only)
+export const newsletterSignups: string[] = [];
